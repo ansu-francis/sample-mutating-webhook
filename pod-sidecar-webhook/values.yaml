@@ -1,4 +1,4 @@
 image:
-  repository: ocdr/psw
+  repository: <repo-name>/<image>
   tag: latest
 

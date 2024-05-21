@@ -1,2 +1,9 @@
-clone the repo
-helm install sample-sidecar ./pod-sidecar-webhook/
+1. clone the repo
+2. cd src
+3. build docker image and push
+4. specify image repo and name in pod-sidecar-webhook/values.yaml
+5. helm install sample-sidecar ./pod-sidecar-webhook/
+6. kubectl apply -f config/sample-pod.yaml
+
+Note: For Webhook, we need to have a CA which can sign certificates for TLS. We are using cert-manager for this. We will use cert-manager provided certificates for TLS termination.
+Install cert manager first.

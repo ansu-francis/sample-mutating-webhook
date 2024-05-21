@@ -1,0 +1,25 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: {{ .Release.Name }}-mutating-webhook
+  annotations:
+    cert-manager.io/inject-ca-from: default/{{ .Release.Name }}-webhook-certs
+webhooks:
+  - name: {{ .Release.Name }}-mutating-webhook.sample.test
+    admissionReviewVersions:
+      - "v1beta1"
+    sideEffects: "None"
+    timeoutSeconds: 30
+    objectSelector:
+      matchLabels:
+        inject-sample-sidecar: "true"
+    clientConfig:
+      service:
+        name: {{ .Release.Name }}-mutating-webhook
+        namespace: default
+        path: "/mutate"
+    rules:
+      - operations: [ "CREATE"]
+        apiGroups: [""]
+        apiVersions: ["v1"]
+        resources: ["pods"]

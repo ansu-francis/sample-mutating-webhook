@@ -1,0 +1,2 @@
+clone the repo
+helm install sample-sidecar ./pod-sidecar-webhook/

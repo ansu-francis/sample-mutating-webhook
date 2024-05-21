@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-mutating-webhook
+  namespace: default
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-mutating-webhook
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-mutating-webhook
+    spec:
+      serviceAccountName: {{ .Release.Name }}-mutating-webhook
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1234
+      containers:
+        - name: server
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8443
+              name: tls
+            - containerPort: 80
+              name: metrics
+          volumeMounts:
+            - name: webhook-tls-certs
+              mountPath: /etc/webhook/certs/
+              readOnly: true
+      volumes:
+        - name: webhook-tls-certs
+          secret:
+            secretName: {{ .Release.Name }}-webhook-certs
